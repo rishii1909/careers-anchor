@@ -12,9 +12,9 @@
 .responsive-container{
   width: 100%;
   max-width: 1400px;
-  margin: 0 auto;
+  margin: 0 auto  ;
   text-align: left;
-  padding: 2em 1em;
+  padding: 2em;
 }
 
 .form-container{
