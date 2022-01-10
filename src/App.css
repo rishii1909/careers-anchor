@@ -18,16 +18,52 @@
 }
 
 .form-container{
-  padding: 2em 1em;
+  padding: 3em 1em;
   border-radius: 4px;
   box-shadow: 0px 0px 8px 3px lightgray;
   text-align: left;
   width: 100%;
 }
 
-.marked-label{
-  width: 100%;
+.results-container{
+  padding: 0 1em;
 }
+
+.progress-container{
+  opacity: 0.8;
+  transition: 0.2s ease;
+}
+.progress-container:hover{
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+
+.download-button{
+  box-shadow: -0.5px 0.5px 4px 1px gray;
+}
+
+.wiggle{
+  animation: wiggle 2.5s infinite;
+  transition: 2s ease;
+}
+
+.download-button:hover{
+  transform: scale(1.1);
+  animation: none;
+}
+
+
+@keyframes wiggle {
+  0% { transform: rotate(0deg); }
+  79% { transform: rotate(0deg); }
+ 80% { transform: scale(1.1) rotate(2deg); }
+ 85% { transform: scale(1.1) rotate(-2deg); }
+ 90% { transform: scale(1.1) rotate(2deg); }
+ 95% { transform: scale(1.1) rotate(-2deg); }
+100% { transform: rotate(0deg); }
+}
+
 
 
 
