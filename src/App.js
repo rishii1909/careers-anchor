@@ -2,20 +2,15 @@
 import React, { useState } from 'react';
 
 import './App.css';
-import { Button, Form, Slider, Divider, Progress, Row, Col, Table, message } from 'antd';
+import { Button, Form, Slider, Divider, Progress, Row, Col, Table, message, Tag } from 'antd';
 import { ExperimentOutlined, DownloadOutlined } from '@ant-design/icons';
 
 import questions from './questions';
 import RadarChart from '@ant-design/plots/es/components/radar';
 import printHtmlToPDF from "print-html-to-pdf";
 
-var responses = [];
+// var responses = [];
 
-// For testing
-// for (let i = 0; i < questions.length; i++) {
-//   responses[i] = Math.floor(Math.random() * 11)*10;
-  
-// }
 
 const anchors = {
   0 : "Security, Stability, Organizational Identity",
@@ -35,13 +30,19 @@ function App() {
   const [filled, setFilled] = useState(false);
   const [printing, setPrinting] = useState(false);
   const [downloaded, setDownloaded] = useState(false);
+  const [responses, setResponses] = useState([]);
 
+  // For testing
+  // for (let i = 0; i < questions.length; i++) {
+  //   responses[i] = Math.floor(Math.random() * 11)*10;
+
+  // }
 
   function onFinish(values){
 
     let condense = [];
     for (let i = 0; i < questions.length; i++) {
-      const el = responses[i];
+      const el = responses[i] || 0;
       const addr = (i) % 8;
       if(addr === 0) console.log(i, el)
       if(condense[addr] === undefined){
@@ -87,6 +88,8 @@ function App() {
     setDownloaded(true);
    };
 
+   var [form] = Form.useForm();
+
   return (
     <div className="App" id='app-root'> 
       <div className='responsive-container'>
@@ -100,6 +103,7 @@ function App() {
         <Divider></Divider>
         <div className='form-container' >
           <Form
+            form={form}
             labelCol={{ span: 8 }}
             labelAlign='left'
             labelWrap
@@ -113,26 +117,44 @@ function App() {
           >
             {questions.map((q, i) =>
               <Form.Item
-              // name={`question_${}`}
-              name={i}
+              name={`question_${i}`}
+              // name={i}
               key={i}
               label={`Q${i+1}. ${q.text}`}
               style={{paddingBottom : '1em', borderBottom : '1px solid lightGray'}}
               rules={[{required : true, message : "Please make a choice."}]}
-              // initialValue={responses[i]}
+              // initialValue={50}
               >
+              <div style={{display : 'flex', justifyContent : 'space-between'}} >
+                {q.type === '0' && 
+                  <>
+                    <Tag color='volcano'>Not Important</Tag>
+                    <Tag>{ responses[i] !== undefined ? formatter[q.type](responses[i]) : "Not chosen yet" }</Tag>
+                    <Tag color='cyan'>Important</Tag>
+                  </>    
+                }
+                {q.type === '1' && 
+                  <>
+                    <Tag color='volcano'>I disagree</Tag>
+                    <Tag>{ responses[i] !== undefined ? formatter[q.type](responses[i]) : "Not chosen yet" }</Tag>
+                    <Tag color='cyan'>I agree</Tag>
+                  </>    
+                }
+              </div>
+                
                 <Slider
                 defaultValue={50}
                   min={0}
                   step={10}
                   tipFormatter={formatter[q.type]}
-                  tooltipVisible={true}
+                  tooltipVisible={responses[i] !== undefined}
                   max={100}
                   onChange={(val) => {
+                    form.setFieldsValue({ [`question_${i}`] : val });
                     if(responses[i] === undefined) setResponse_counter(response_counter + 1);
                     responses[i] = val;
                     if(filled) setFilled(false);
-                  }}
+                  }}  
                   disabled={filled}
                 />
               </Form.Item>
